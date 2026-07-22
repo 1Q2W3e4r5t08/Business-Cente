@@ -1,0 +1,1159 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Referral Worklist — Business Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#EDF1F3; --surface:#FFFFFF; --surface-2:#F7F9FA;
+  --ink:#0E2029; --ink-2:#415967; --ink-3:#7B929E;
+  --line:#D8E1E6; --line-2:#EAF0F3;
+  --brand:#0E5A6B; --brand-2:#12798E; --brand-soft:#E1EFF2;
+  --s-new:#6B7A8F; --s-review:#B4761A; --s-mr:#2A63A8; --s-done:#1C7A56; --s-acc:#6B3FA0;
+  --danger:#B3352F;
+  --r:10px; --shadow:0 1px 2px rgba(14,32,41,.06), 0 6px 20px rgba(14,32,41,.05);
+  --font-ar:"IBM Plex Sans Arabic",system-ui,sans-serif;
+  --font-en:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-ar);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body[dir=ltr]{font-family:var(--font-en)}
+.mono{font-family:var(--mono);font-feature-settings:"tnum";letter-spacing:-.2px}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px;border-radius:4px}
+
+/* ---------- top bar ---------- */
+.topbar{background:var(--brand);color:#fff;position:sticky;top:0;z-index:40}
+.topbar-in{max-width:1320px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-inline-end:auto}
+.brand .mark{width:30px;height:30px;border:1.5px solid rgba(255,255,255,.6);border-radius:7px;display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:600}
+.brand h1{font-size:15px;font-weight:600;margin:0;letter-spacing:.1px}
+.brand span{display:block;font-size:11px;opacity:.7;font-weight:400}
+.ctrl{display:flex;align-items:center;gap:8px}
+.ctrl label{font-size:11px;opacity:.75}
+select.dark{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:7px;padding:6px 10px;font-size:12.5px}
+select.dark option{color:#0E2029}
+.lang{border:1px solid rgba(255,255,255,.3);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;letter-spacing:.3px}
+.lang:hover{background:rgba(255,255,255,.12)}
+.whoami{display:flex;flex-direction:column;line-height:1.25;font-size:11.5px;opacity:.85;border-inline-start:1px solid rgba(255,255,255,.22);padding-inline-start:14px}
+.whoami b{font-size:12.5px;font-weight:600;opacity:1}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1320px;margin:0 auto;padding:18px 20px 60px}
+.rowhead{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.rowhead h2{margin:0;font-size:19px;font-weight:600}
+.rowhead p{margin:2px 0 0;font-size:12.5px;color:var(--ink-3)}
+.btn{background:var(--brand);color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{background:var(--brand-2)}
+.btn.ghost{background:var(--surface);color:var(--brand);border:1px solid var(--line)}
+.btn.ghost:hover{background:var(--brand-soft)}
+.btn.sm{padding:6px 12px;font-size:12.5px}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn.ghost.danger{color:var(--danger);border-color:#EBCFCD}
+.btn.ghost.danger:hover{background:#FBEAE9}
+.btn.solid-danger{background:var(--danger);color:#fff}
+.btn.solid-danger:hover{background:#96271F}
+.tag-opt{font-size:10.5px;color:var(--ink-3);background:var(--surface-2);border:1px solid var(--line);padding:2px 7px;border-radius:5px;font-weight:500}
+
+/* ---------- status rail (signature) ---------- */
+.counters{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:14px}
+.cnt{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;text-align:start;position:relative;overflow:hidden}
+.cnt:hover{border-color:var(--brand-2)}
+.cnt.on{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand)}
+.cnt .spine{position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;background:var(--c,#ccc)}
+.cnt .n{font-family:var(--mono);font-size:22px;font-weight:600;line-height:1.1}
+.cnt .l{font-size:11.5px;color:var(--ink-2);margin-top:1px}
+.cnt .step{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+
+/* ---------- filters ---------- */
+.filters{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;margin-bottom:16px;align-items:end}
+.f label{display:block;font-size:11px;color:var(--ink-3);margin-bottom:4px;font-weight:500}
+.f input,.f select{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px}
+.f input:focus,.f select:focus{background:#fff;border-color:var(--brand-2)}
+
+/* ---------- cards ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);position:relative;overflow:hidden;display:flex;flex-direction:column}
+.card .spine{position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;background:var(--c)}
+.card-top{padding:12px 14px 10px;padding-inline-start:17px;border-bottom:1px dashed var(--line-2)}
+.crow{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.clinic{font-size:14px;font-weight:600;line-height:1.35}
+.ccode{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:1px}
+.pill{font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:999px;white-space:nowrap;background:var(--cbg);color:var(--c);border:1px solid var(--c)}
+.refno{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);margin-top:8px;display:flex;gap:10px;flex-wrap:wrap}
+.card-body{padding:11px 14px;padding-inline-start:17px;display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+.kv .k{font-size:10.5px;color:var(--ink-3)}
+.kv .v{font-size:13px;font-weight:500;margin-top:1px}
+.kv.wide{grid-column:1/-1}
+/* rail */
+.rail{padding:10px 14px 0;padding-inline-start:17px}
+.rail .track{display:flex;gap:3px}
+.rail .seg{height:4px;flex:1;border-radius:2px;background:var(--line)}
+.rail .seg.on{background:var(--c)}
+.rail .cap{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--ink-3);margin-top:5px}
+.card-foot{margin-top:auto;padding:11px 14px;padding-inline-start:17px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line-2);background:var(--surface-2)}
+.badge-flag{font-size:10.5px;font-weight:600;color:var(--s-review);background:#FBF1E0;border:1px solid #EBD7B0;padding:2px 7px;border-radius:5px}
+.badge-miss{font-size:10.5px;font-weight:600;color:var(--danger);background:#FBEAE9;border:1px solid #F0C9C7;padding:2px 7px;border-radius:5px}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:44px 20px;text-align:center;color:var(--ink-3)}
+.empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
+
+/* ---------- modal ---------- */
+.scrim{position:fixed;inset:0;background:rgba(14,32,41,.45);backdrop-filter:blur(2px);z-index:60;display:grid;place-items:center;padding:20px}
+.modal{background:var(--surface);border-radius:14px;width:min(880px,100%);max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 60px rgba(14,32,41,.3)}
+.modal header{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.modal header h3{margin:0;font-size:16px;font-weight:600}
+.modal header .sub{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.x{margin-inline-start:auto;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--ink-3);font-size:18px}
+.x:hover{background:var(--surface-2);color:var(--ink)}
+.modal .body{padding:16px 18px;overflow:auto}
+.modal footer{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;background:var(--surface-2)}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);padding:0 18px;background:var(--surface)}
+.tab{padding:10px 14px;font-size:13px;font-weight:500;color:var(--ink-3);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+.sect{margin-bottom:18px}
+.sect h4{margin:0 0 8px;font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:.4px;text-transform:uppercase}
+.dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px 14px}
+.dl .k{font-size:10.5px;color:var(--ink-3)}
+.dl .v{font-size:13.5px;font-weight:500}
+/* docs */
+.doc{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;margin-bottom:7px;background:var(--surface-2)}
+.doc .ic{width:28px;height:28px;border-radius:7px;display:grid;place-items:center;font-family:var(--mono);font-size:9.5px;font-weight:600;background:#fff;border:1px solid var(--line);color:var(--ink-2)}
+.doc .nm{font-size:13px;font-weight:500}
+.doc .mt{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+.doc .st{margin-inline-start:auto;display:flex;align-items:center;gap:8px}
+.tag-ok{font-size:10.5px;color:var(--s-done);background:#E5F3ED;border:1px solid #BFE0D3;padding:2px 7px;border-radius:5px;font-weight:600}
+.tag-no{font-size:10.5px;color:var(--danger);background:#FBEAE9;border:1px solid #F0C9C7;padding:2px 7px;border-radius:5px;font-weight:600}
+.viewer{background:#0E2029;color:#93AEBB;border-radius:9px;padding:26px;text-align:center;font-family:var(--mono);font-size:12px;margin-top:8px}
+/* timeline */
+.tl{position:relative;padding-inline-start:22px}
+.tl::before{content:"";position:absolute;inset-inline-start:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+.tl .ev{position:relative;padding-bottom:16px}
+.tl .ev .dot{position:absolute;inset-inline-start:-22px;top:3px;width:11px;height:11px;border-radius:50%;background:#fff;border:2.5px solid var(--c)}
+.tl .ev .t{font-size:13.5px;font-weight:600}
+.tl .ev .m{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:2px}
+.tl .ev .n{font-size:12px;color:var(--ink-2);margin-top:3px}
+/* form */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px}
+.fld label{display:block;font-size:11px;color:var(--ink-2);margin-bottom:4px;font-weight:500}
+.fld label i{color:var(--danger);font-style:normal}
+.fld input,.fld select{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px}
+.fld input:focus,.fld select:focus{background:#fff;border-color:var(--brand-2)}
+.upl{border:1.5px dashed var(--line);border-radius:9px;padding:11px;display:flex;align-items:center;gap:10px;margin-bottom:7px;background:var(--surface-2)}
+.upl.done{border-style:solid;border-color:#BFE0D3;background:#F2FAF6}
+.note{background:var(--brand-soft);border:1px solid #C3DDE2;border-radius:9px;padding:10px 12px;font-size:12.5px;color:#0B4653;display:flex;gap:9px;align-items:flex-start}
+.note.warn{background:#FBF1E0;border-color:#EBD7B0;color:#7A4E08}
+/* HIS mock */
+.his{background:#0E2029;border-radius:11px;padding:14px;margin-bottom:14px}
+.his .bar{display:flex;align-items:center;gap:8px;color:#8FB0BD;font-family:var(--mono);font-size:11px;margin-bottom:11px}
+.his .bar span{width:9px;height:9px;border-radius:50%;background:#2C4756}
+.his .screen{background:#fff;border-radius:7px;padding:14px}
+.toast{position:fixed;inset-block-end:22px;inset-inline-start:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:9px;font-size:13px;z-index:90;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+body[dir=rtl] .toast{transform:translateX(50%)}
+
+/* ---------- guide ---------- */
+.modal.wide{width:min(1000px,100%)}
+.toc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.toc button{font-size:11.5px;padding:5px 11px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2);background:var(--surface-2)}
+.toc button:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
+.guide{font-size:13.5px;line-height:1.75;color:var(--ink-2)}
+.guide section{margin-bottom:26px;scroll-margin-top:8px}
+.guide h5{margin:0 0 4px;font-size:16px;font-weight:600;color:var(--ink);display:flex;align-items:baseline;gap:9px}
+.guide h5 em{font-family:var(--mono);font-style:normal;font-size:11px;color:var(--brand-2);border:1px solid var(--brand-soft);background:var(--brand-soft);border-radius:5px;padding:1px 6px}
+.guide p{margin:0 0 9px}
+.guide ul,.guide ol{margin:0 0 9px;padding-inline-start:20px}
+.guide li{margin-bottom:5px}
+.guide b{color:var(--ink);font-weight:600}
+.guide code{font-family:var(--mono);font-size:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+.gt{width:100%;border-collapse:collapse;margin:4px 0 10px;font-size:12.5px}
+.gt th{text-align:start;background:var(--surface-2);color:var(--ink);font-weight:600;font-size:11.5px;padding:8px 10px;border:1px solid var(--line)}
+.gt td{padding:8px 10px;border:1px solid var(--line);vertical-align:top}
+.gt tr:nth-child(even) td{background:#FCFDFD}
+.chip{display:inline-block;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid var(--c);color:var(--c);background:var(--cbg);white-space:nowrap}
+.callout{border-inline-start:3px solid var(--brand);background:var(--brand-soft);border-radius:0 9px 9px 0;padding:10px 13px;margin:0 0 10px;color:#0B4653}
+body[dir=rtl] .callout{border-radius:9px 0 0 9px}
+.callout.warn{border-color:var(--s-review);background:#FBF1E0;color:#7A4E08}
+@media (max-width:760px){
+  .filters{grid-template-columns:1fr}
+  .card-body{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion:no-preference){
+  .card{transition:border-color .15s, box-shadow .15s}
+  .card:hover{border-color:#B9CCD4;box-shadow:0 2px 4px rgba(14,32,41,.07),0 10px 28px rgba(14,32,41,.08)}
+}
+</style>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <div class="mark">HIS</div>
+      <div>
+        <h1 id="appTitle"></h1>
+        <span id="appSub"></span>
+      </div>
+    </div>
+    <div class="ctrl">
+      <label id="roleLbl"></label>
+      <select class="dark" id="roleSel" onchange="setRole(this.value)"></select>
+    </div>
+    <div class="whoami">
+      <b id="userName"></b>
+      <span class="mono" id="userNo"></span>
+    </div>
+    <button class="lang" onclick="openGuide()" id="guideBtn"></button>
+    <button class="lang" onclick="toggleLang()" id="langBtn"></button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="rowhead">
+    <div>
+      <h2 id="pageTitle"></h2>
+      <p id="pageHint"></p>
+    </div>
+    <button class="btn" id="newBtn" onclick="openNew()">+ <span id="newBtnT"></span></button>
+  </div>
+
+  <div class="counters" id="counters"></div>
+
+  <div class="filters">
+    <div class="f"><label id="lblSearch"></label><input id="q" oninput="render()" placeholder=""></div>
+    <div class="f"><label id="lblClinic"></label><select id="fClinic" onchange="render()"></select></div>
+    <div class="f"><label id="lblStatus"></label><select id="fStatus" onchange="render()"></select></div>
+    <div class="f"><button class="btn ghost" onclick="clearF()" id="clearBtn"></button></div>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<div id="modalHost"></div>
+<div id="toastHost"></div>
+
+<script>
+/* ================= i18n ================= */
+const T = {
+ ar:{
+  appTitle:"لوحة إدارة التحويلات", appSub:"مركز الأعمال — نظام معلومات المستشفى",
+  role:"الدور", lang:"EN",
+  roles:{bc:"مركز الأعمال",opd:"العيادات الخارجية",er:"قسم الطوارئ",ipd:"مكتب التنويم"},
+  pageTitleBC:"جميع التحويلات الواردة", pageTitleDept:"الحالات المكتملة الجاهزة للاستقبال",
+  hintBC:"إدخال بيانات التحويل، رفع المستندات، فتح ملف المريض، ثم اعتماد الحالة كمكتملة.",
+  hintDept:"ابحث برقم الهوية أو اسم المريض. عند حضور المريض اضغط «فتح كشف».",
+  newBtn:"تحويل جديد",
+  search:"بحث (رقم الهوية / اسم المريض / اسم أو كود العيادة)",
+  searchPh:"مثال: 1054‑ أو أحمد أو RYD",
+  clinic:"العيادة / المركز المحوّل", status:"حالة التحويل", all:"الكل", clear:"مسح التصفية",
+  st:{new:"جديد",review:"جاري المراجعة",mr:"تم فتح ملف",done:"مكتمل",acc:"تم قبول المريض",
+      cancel:"ملغي",edit:"تعديل بيانات"},
+  k:{ref:"رقم التحويل",received:"تاريخ الاستلام",clinicCode:"كود العيادة",doctor:"الطبيب المعالج",
+     patient:"اسم المريض",nid:"رقم الهوية",age:"العمر",dob:"تاريخ الميلاد",gender:"الجنس",phone:"جوال المريض",
+     nat:"الجنسية",payer:"الجهة الدافعة",insCode:"كود التأمين",dept:"الجهة المستقبِلة",
+     spec:"التخصص",mrn:"رقم الملف الطبي",yrs:"سنة"},
+  depts:{opd:"العيادات الخارجية",er:"الطوارئ",ipd:"التنويم"},
+  gender:{m:"ذكر",f:"أنثى"},
+  btnDocs:"عرض المرفقات", btnOpenFile:"فتح ملف", btnOpenVisit:"فتح كشف", btnDetails:"التفاصيل",
+  btnReview:"بدء المراجعة", btnComplete:"اعتماد كمكتمل",
+  tabs:{info:"بيانات التحويل",docs:"المرفقات",tl:"سجل التتبع"},
+  secPatient:"بيانات المريض", secRef:"بيانات التحويل", secIns:"بيانات التأمين",
+  docNames:{form:"نموذج التحويل",report:"التقرير الطبي",letter:"خطاب العلاج",other:"مستندات داعمة أخرى"},
+  req:"إلزامي", opt:"اختياري", uploaded:"مرفوع", missing:"غير مرفوع",
+  prevFile:"ملف سابق موجود", missingDocs:"مستندات ناقصة",
+  viewerNote:"معاينة المستند — نسخة تجريبية",
+  newTitle:"إدخال تحويل جديد", newSave:"حفظ التحويل", cancel:"إلغاء",
+  docsHint:"نموذج التحويل والتقرير الطبي إلزاميان قبل اعتماد الحالة كمكتملة. الباقي اختياري.",
+  fileTitle:"إنشاء ملف المريض", fileTitleUpd:"تحديث ملف المريض",
+  fileNote:"البيانات معبأة تلقائياً من بطاقة التحويل. راجعها ثم احفظ.",
+  fileNoteUpd:"يوجد ملف سابق بنفس رقم الهوية. سيتم تحديث البيانات وكود التأمين على الملف الحالي.",
+  fileSave:"حفظ الملف", fileUpd:"تحديث الملف",
+  visitTitle:"فتح كشف للمريض", visitNote:"سيتم تسجيل حضور المريض وتحويل الحالة إلى «تم قبول المريض».",
+  visitConfirm:"تأكيد فتح الكشف",
+  emptyT:"لا توجد حالات مطابقة", emptyD:"جرّب تعديل كلمة البحث أو التصفية.",
+  emptyDeptT:"لا توجد حالات مكتملة حالياً", emptyDeptD:"تظهر الحالة هنا بعد اعتمادها من مركز الأعمال.",
+  tlNew:"تم إدخال التحويل في النظام", tlReview:"بدأت مراجعة البيانات والمستندات",
+  tlMr:"تم إنشاء ملف المريض", tlMrU:"تم تحديث ملف المريض الحالي",
+  tlDone:"تم اعتماد الحالة كمكتملة وإتاحتها للأقسام", tlAcc:"تم فتح كشف للمريض عند حضوره",
+  by:"بواسطة", empNo:"الرقم الوظيفي",
+  tSaved:"تم حفظ التحويل", tReview:"تم تحويل الحالة إلى: جاري المراجعة",
+  tMr:"تم إنشاء الملف — رقم الملف ", tMrU:"تم تحديث الملف — رقم الملف ",
+  tDone:"الحالة مكتملة وظاهرة الآن للأقسام", tAcc:"تم فتح الكشف — الحالة: تم قبول المريض",
+  needDocs:"لا يمكن الاعتماد: يوجد مستندات إلزامية ناقصة", needMr:"لا يمكن الاعتماد: يجب فتح ملف المريض أولاً",
+  onlyBC:"هذا الإجراء متاح لمركز الأعمال فقط", stepOf:"المرحلة",
+  btnEdit:"تعديل", btnCancelRef:"إلغاء التحويل",
+  editTitle:"تعديل بيانات التحويل", editSave:"حفظ التعديلات",
+  cancelTitle:"إلغاء التحويل", cancelNote:"لن يظهر التحويل الملغي للأقسام، ويبقى في اللوحة للتتبع فقط.",
+  reasonLbl:"سبب الإلغاء", reasonPh:"اكتب سبب الإلغاء…",
+  reasonPick:"اختر سبباً", reasons:["مستندات ناقصة ولم تُستكمل","تكرار طلب تحويل لنفس المريض",
+    "الحالة خارج نطاق تخصصات المستشفى","إلغاء من الجهة المحوّلة","بيانات المريض غير صحيحة","سبب آخر"],
+  cancelConfirm:"تأكيد الإلغاء", needReason:"سبب الإلغاء إلزامي",
+  cancelled:"تحويل ملغي", reasonShown:"السبب",
+  lockedNote:"الحالة مكتملة وانتقلت للأقسام — لا يمكن التعديل أو الإلغاء.",
+  tlCancel:"تم إلغاء التحويل", tlEdit:"تم تعديل بيانات التحويل / المرفقات",
+  tCancelled:"تم إلغاء التحويل", tEdited:"تم حفظ التعديلات",
+  guideBtn:"دليل الاستخدام", guideTitle:"الدليل الإرشادي — لوحة إدارة التحويلات",
+  guideSub:"شرح كامل للمحاكي: الأدوار، المراحل، والإجراءات", guideClose:"إغلاق الدليل",
+  needDob:"تاريخ الميلاد إلزامي — لا يمكن الحفظ بدونه", dobAuto:"يُحتسب العمر تلقائياً"
+ },
+ en:{
+  appTitle:"Referral Worklist", appSub:"Business Center — Hospital Information System",
+  role:"Role", lang:"عربي",
+  roles:{bc:"Business Center",opd:"Outpatient Clinics",er:"Emergency Dept.",ipd:"Admission Office"},
+  pageTitleBC:"All incoming referrals", pageTitleDept:"Completed cases ready for reception",
+  hintBC:"Enter referral data, upload documents, create the patient file, then mark the case complete.",
+  hintDept:"Search by national ID or patient name. When the patient arrives, choose “Open visit”.",
+  newBtn:"New referral",
+  search:"Search (national ID / patient name / clinic name or code)",
+  searchPh:"e.g. 1054… or Ahmed or RYD",
+  clinic:"Referring clinic / center", status:"Referral status", all:"All", clear:"Clear filters",
+  st:{new:"New",review:"Under Review",mr:"MR Created",done:"Completed",acc:"Accepted",
+      cancel:"Cancelled",edit:"Details edited"},
+  k:{ref:"Referral no.",received:"Received on",clinicCode:"Clinic code",doctor:"Treating doctor",
+     patient:"Patient name",nid:"National ID",age:"Age",dob:"Date of birth",gender:"Gender",phone:"Mobile",
+     nat:"Nationality",payer:"Payer",insCode:"Insurance code",dept:"Receiving unit",
+     spec:"Specialty",mrn:"MRN",yrs:"yrs"},
+  depts:{opd:"Outpatient",er:"Emergency",ipd:"Inpatient"},
+  gender:{m:"Male",f:"Female"},
+  btnDocs:"Attachments", btnOpenFile:"Open file", btnOpenVisit:"Open visit", btnDetails:"Details",
+  btnReview:"Start review", btnComplete:"Mark complete",
+  tabs:{info:"Referral data",docs:"Attachments",tl:"Audit trail"},
+  secPatient:"Patient details", secRef:"Referral details", secIns:"Insurance",
+  docNames:{form:"Referral form",report:"Medical report",letter:"Treatment letter",other:"Other supporting documents"},
+  req:"Required", opt:"Optional", uploaded:"Uploaded", missing:"Not uploaded",
+  prevFile:"Existing file found", missingDocs:"Missing documents",
+  viewerNote:"Document preview — mock",
+  newTitle:"New referral entry", newSave:"Save referral", cancel:"Cancel",
+  docsHint:"The referral form and medical report are required before the case can be marked complete. The rest are optional.",
+  fileTitle:"Create patient file", fileTitleUpd:"Update patient file",
+  fileNote:"Fields are pre-filled from the referral card. Review, then save.",
+  fileNoteUpd:"A file already exists for this national ID. Details and insurance code will be updated on it.",
+  fileSave:"Save file", fileUpd:"Update file",
+  visitTitle:"Open visit", visitNote:"This records the patient's arrival and moves the case to “Accepted”.",
+  visitConfirm:"Confirm open visit",
+  emptyT:"No matching cases", emptyD:"Try a different search term or filter.",
+  emptyDeptT:"No completed cases yet", emptyDeptD:"Cases appear here once the Business Center marks them complete.",
+  tlNew:"Referral entered into the system", tlReview:"Review of data and documents started",
+  tlMr:"Patient file created", tlMrU:"Existing patient file updated",
+  tlDone:"Case marked complete and released to departments", tlAcc:"Visit opened on patient arrival",
+  by:"by", empNo:"Emp. no.",
+  tSaved:"Referral saved", tReview:"Status changed to: Under Review",
+  tMr:"File created — MRN ", tMrU:"File updated — MRN ",
+  tDone:"Case complete and now visible to departments", tAcc:"Visit opened — status: Accepted",
+  needDocs:"Cannot complete: required documents are missing", needMr:"Cannot complete: create the patient file first",
+  onlyBC:"This action is available to the Business Center only", stepOf:"Stage",
+  btnEdit:"Edit", btnCancelRef:"Cancel referral",
+  editTitle:"Edit referral details", editSave:"Save changes",
+  cancelTitle:"Cancel referral", cancelNote:"Cancelled referrals are hidden from departments and kept here for tracking only.",
+  reasonLbl:"Cancellation reason", reasonPh:"Type the reason…",
+  reasonPick:"Choose a reason", reasons:["Documents incomplete and not provided","Duplicate referral for the same patient",
+    "Case outside the hospital's specialties","Cancelled by the referring provider","Incorrect patient details","Other reason"],
+  cancelConfirm:"Confirm cancellation", needReason:"A cancellation reason is required",
+  cancelled:"Cancelled referral", reasonShown:"Reason",
+  lockedNote:"Case is complete and released to departments — editing and cancelling are locked.",
+  tlCancel:"Referral cancelled", tlEdit:"Referral details / attachments edited",
+  tCancelled:"Referral cancelled", tEdited:"Changes saved",
+  guideBtn:"User guide", guideTitle:"User guide — Referral Worklist",
+  guideSub:"A full walkthrough: roles, stages and actions", guideClose:"Close guide",
+  needDob:"Date of birth is required — it cannot be left empty", dobAuto:"Age is calculated automatically"
+ }
+};
+
+const STATUSES=["new","review","mr","done","acc"];
+const SC={new:{c:"var(--s-new)",bg:"#EEF1F4"},review:{c:"var(--s-review)",bg:"#FBF1E0"},
+          mr:{c:"var(--s-mr)",bg:"#E8F0FA"},done:{c:"var(--s-done)",bg:"#E5F3ED"},
+          acc:{c:"var(--s-acc)",bg:"#F0EAF9"},
+          cancel:{c:"var(--danger)",bg:"#FBEAE9"},edit:{c:"#7B929E",bg:"#EEF1F4"}};
+
+let LANG="ar", ROLE="bc";
+const USERS={bc:{ar:"سارة العتيبي",en:"Sarah Alotaibi",no:"BC‑4417"},
+             opd:{ar:"خالد الدوسري",en:"Khalid Aldosari",no:"OPD‑2290"},
+             er:{ar:"منى الشهري",en:"Muna Alshehri",no:"ER‑7731"},
+             ipd:{ar:"فهد القحطاني",en:"Fahad Alqahtani",no:"IPD‑5108"}};
+const t=()=>T[LANG];
+const U=()=>USERS[ROLE];
+const uname=()=>U()[LANG]||U().en;
+
+/* ================= mock data ================= */
+const CLINICS=[
+ {code:"RYD‑0142",ar:"مجمع النخبة الطبي",en:"Al Nokhba Medical Complex"},
+ {code:"RYD‑0873",ar:"مركز الشفاء التخصصي",en:"Al Shifa Specialist Center"},
+ {code:"QSM‑0311",ar:"عيادات الوفاء",en:"Al Wafa Clinics"},
+ {code:"RYD‑0559",ar:"مركز رؤية للعيون",en:"Ruya Eye Center"}
+];
+let SEQ=1050;
+const stamp=(d)=>d;
+
+function mk(o){
+  return Object.assign({
+    id:crypto.randomUUID(), ref:"REF‑"+(++SEQ),
+    docs:{form:true,report:true,letter:true,other:false},
+    hasPrev:false, mrn:null, timeline:[]
+  },o);
+}
+
+let DATA=[
+ mk({clinic:0,doctorAr:"د. عبدالله المطيري",doctorEn:"Dr. Abdullah Almutairi",
+     pAr:"أحمد سالم الغامدي",pEn:"Ahmed Salem Alghamdi",nid:"1054872310",dob:"1979-03-14",g:"m",
+     phone:"0555 214 887",natAr:"سعودي",natEn:"Saudi",payerAr:"بوبا العربية",payerEn:"Bupa Arabia",
+     ins:"BUP‑77120",dept:"opd",specAr:"باطنية",specEn:"Internal Medicine",
+     recv:"2026‑07‑16 09:12",status:"new"}),
+ mk({clinic:1,doctorAr:"د. نورة الحربي",doctorEn:"Dr. Noura Alharbi",
+     pAr:"ليان محمد العنزي",pEn:"Layan Mohammed Alanazi",nid:"2298104477",dob:"2017-01-22",g:"f",
+     phone:"0533 907 461",natAr:"سعودي",natEn:"Saudi",payerAr:"التعاونية",payerEn:"Tawuniya",
+     ins:"TAW‑40318",dept:"opd",specAr:"أطفال",specEn:"Pediatrics",
+     recv:"2026‑07‑16 11:40",status:"review",docs:{form:true,report:false,letter:false,other:false}}),
+ mk({clinic:2,doctorAr:"د. ماجد الزهراني",doctorEn:"Dr. Majed Alzahrani",
+     pAr:"سعد فهد الشمري",pEn:"Saad Fahad Alshammari",nid:"1077319902",dob:"1964-06-05",g:"m",
+     phone:"0501 663 220",natAr:"سعودي",natEn:"Saudi",payerAr:"ميدغلف",payerEn:"MedGulf",
+     ins:"MED‑21094",dept:"ipd",specAr:"جراحة عظام",specEn:"Orthopedics",
+     recv:"2026‑07‑15 14:05",status:"mr",mrn:"MRN‑889201",hasPrev:true}),
+ mk({clinic:0,doctorAr:"د. هيا السبيعي",doctorEn:"Dr. Haya Alsubaie",
+     pAr:"مريم عبدالعزيز القرني",pEn:"Mariam Abdulaziz Alqarni",nid:"1093556128",dob:"1992-09-18",g:"f",
+     phone:"0544 118 903",natAr:"سعودي",natEn:"Saudi",payerAr:"بوبا العربية",payerEn:"Bupa Arabia",
+     ins:"BUP‑77455",dept:"opd",specAr:"نساء وولادة",specEn:"Obstetrics",
+     recv:"2026‑07‑15 08:31",status:"done",mrn:"MRN‑889244",docs:{form:true,report:true,letter:true,other:true}}),
+ mk({clinic:3,doctorAr:"د. تركي البقمي",doctorEn:"Dr. Turki Albaqami",
+     pAr:"يوسف ناصر الدوسري",pEn:"Yousef Nasser Aldosari",nid:"1066402318",dob:"1971-11-30",g:"m",
+     phone:"0566 340 771",natAr:"سعودي",natEn:"Saudi",payerAr:"التعاونية",payerEn:"Tawuniya",
+     ins:"TAW‑40990",dept:"er",specAr:"عيون",specEn:"Ophthalmology",
+     recv:"2026‑07‑14 19:22",status:"done",mrn:"MRN‑889120"}),
+ mk({clinic:1,doctorAr:"د. ريم الغانم",doctorEn:"Dr. Reem Alghanim",
+     pAr:"عبدالرحمن خالد الحمد",pEn:"Abdulrahman Khalid Alhamad",nid:"1040229917",dob:"1998-02-09",g:"m",
+     phone:"0509 772 118",natAr:"سعودي",natEn:"Saudi",payerAr:"ميدغلف",payerEn:"MedGulf",
+     ins:"MED‑21550",dept:"opd",specAr:"جلدية",specEn:"Dermatology",
+     recv:"2026‑07‑13 10:02",status:"acc",mrn:"MRN‑888740"})
+];
+/* seed timelines */
+DATA.forEach(r=>{
+  const i=STATUSES.indexOf(r.status);
+  const who={ar:"سارة العتيبي",en:"Sarah Alotaibi",no:"BC‑4417"};
+  const times=["09:12","10:05","11:20","12:44","13:30"];
+  for(let s=0;s<=i;s++){
+    const key=STATUSES[s];
+    const actor = key==="acc" ? {ar:"خالد الدوسري",en:"Khalid Aldosari",no:"OPD‑2290"} : who;
+    r.timeline.push({st:key,ar:actor.ar,en:actor.en,no:actor.no,
+      when:r.recv.slice(0,10)+" "+times[s], upd:(key==="mr"&&r.hasPrev)});
+  }
+});
+
+/* ================= helpers ================= */
+const clinicName=(i)=>CLINICS[i][LANG]||CLINICS[i].en;
+const stName=(s)=>t().st[s];
+const isBC=()=>ROLE==="bc";
+const visible=()=>isBC()?DATA:DATA.filter(r=>["done","acc"].includes(r.status));
+const REQDOCS=["form","report"];                       // إلزامي: نموذج التحويل + التقرير الطبي
+const DOCLIST=[["form",1],["report",1],["letter",0],["other",0]];
+const missingDocs=(r)=>REQDOCS.some(k=>!r.docs[k]);
+const editable=(r)=>isBC()&&["new","review","mr"].includes(r.status);
+const calcAge=(dob)=>{
+  if(!dob) return "";
+  const b=new Date(dob), d=new Date();
+  let a=d.getFullYear()-b.getFullYear();
+  const m=d.getMonth()-b.getMonth();
+  if(m<0||(m===0&&d.getDate()<b.getDate())) a--;
+  return a<0?"":a;
+};
+const now=()=>{const d=new Date();const p=n=>String(n).padStart(2,"0");
+  return `${d.getFullYear()}‑${p(d.getMonth()+1)}‑${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;};
+
+function toast(msg){
+  const h=document.getElementById("toastHost");
+  h.innerHTML=`<div class="toast">${msg}</div>`;
+  setTimeout(()=>h.innerHTML="",2600);
+}
+function log(r,st,upd,reason){
+  r.timeline.push({st,ar:U().ar,en:U().en,no:U().no,when:now(),upd:!!upd,reason:reason||""});
+}
+
+/* ================= chrome ================= */
+function toggleLang(){
+  const guideOpen=!!document.querySelector(".modal.wide");
+  LANG=LANG==="ar"?"en":"ar";
+  paint();
+  if(guideOpen) openGuide();
+}
+function setRole(v){ROLE=v;document.getElementById("q").value="";paint();}
+
+function paint(){
+  document.body.dir = LANG==="ar"?"rtl":"ltr";
+  document.documentElement.lang=LANG;
+  const L=t();
+  document.getElementById("appTitle").textContent=L.appTitle;
+  document.getElementById("appSub").textContent=L.appSub;
+  document.getElementById("roleLbl").textContent=L.role;
+  document.getElementById("langBtn").textContent=L.lang;
+  document.getElementById("guideBtn").textContent=L.guideBtn;
+  document.getElementById("userName").textContent=uname();
+  document.getElementById("userNo").textContent=U().no;
+  document.getElementById("pageTitle").textContent=isBC()?L.pageTitleBC:L.pageTitleDept;
+  document.getElementById("pageHint").textContent=isBC()?L.hintBC:L.hintDept;
+  document.getElementById("newBtnT").textContent=L.newBtn;
+  document.getElementById("newBtn").style.display=isBC()?"":"none";
+  document.getElementById("lblSearch").textContent=L.search;
+  document.getElementById("q").placeholder=L.searchPh;
+  document.getElementById("lblClinic").textContent=L.clinic;
+  document.getElementById("lblStatus").textContent=L.status;
+  document.getElementById("clearBtn").textContent=L.clear;
+
+  const rs=document.getElementById("roleSel");
+  rs.innerHTML=Object.keys(L.roles).map(k=>`<option value="${k}" ${k===ROLE?"selected":""}>${L.roles[k]}</option>`).join("");
+
+  const fc=document.getElementById("fClinic"), cur=fc.value;
+  fc.innerHTML=`<option value="">${L.all}</option>`+CLINICS.map((c,i)=>`<option value="${i}">${c[LANG]} — ${c.code}</option>`).join("");
+  fc.value=cur;
+  const fs=document.getElementById("fStatus"), curs=fs.value;
+  const opts=isBC()?[...STATUSES,"cancel"]:["done","acc"];
+  fs.innerHTML=`<option value="">${L.all}</option>`+opts.map(s=>`<option value="${s}">${L.st[s]}</option>`).join("");
+  fs.value=opts.includes(curs)?curs:"";
+  render();
+}
+function clearF(){document.getElementById("q").value="";document.getElementById("fClinic").value="";document.getElementById("fStatus").value="";render();}
+
+/* ================= render ================= */
+function render(){
+  const L=t(), q=document.getElementById("q").value.trim().toLowerCase();
+  const fc=document.getElementById("fClinic").value, fs=document.getElementById("fStatus").value;
+  const base=visible();
+
+  // counters
+  const shown=isBC()?[...STATUSES,"cancel"]:["done","acc"];
+  document.getElementById("counters").innerHTML=shown.map((s,i)=>{
+    const n=base.filter(r=>r.status===s).length;
+    const step=s==="cancel"?"—":`${L.stepOf} ${STATUSES.indexOf(s)+1}/5`;
+    return `<button class="cnt ${fs===s?"on":""}" style="--c:${SC[s].c}" onclick="document.getElementById('fStatus').value='${fs===s?"":s}';render()">
+      <div class="spine"></div>
+      <div class="step mono">${step}</div>
+      <div class="n" style="color:${SC[s].c}">${n}</div>
+      <div class="l">${L.st[s]}</div></button>`;
+  }).join("");
+
+  let rows=base.filter(r=>{
+    if(fc!==""&&String(r.clinic)!==fc) return false;
+    if(fs!==""&&r.status!==fs) return false;
+    if(q){
+      const hay=[r.nid,r.pAr,r.pEn,CLINICS[r.clinic].ar,CLINICS[r.clinic].en,CLINICS[r.clinic].code,r.ref,r.mrn||""].join(" ").toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const host=document.getElementById("list");
+  if(!rows.length){
+    const noneAtAll = base.length===0;
+    host.innerHTML=`<div class="empty"><b>${noneAtAll&&!isBC()?L.emptyDeptT:L.emptyT}</b>${noneAtAll&&!isBC()?L.emptyDeptD:L.emptyD}</div>`;
+    return;
+  }
+  host.innerHTML=`<div class="grid">${rows.map(card).join("")}</div>`;
+}
+
+function rail(r){
+  const idx=r.status==="cancel"?-1:STATUSES.indexOf(r.status);
+  return `<div class="rail"><div class="track">${STATUSES.map((s,i)=>`<div class="seg ${i<=idx?"on":""}"></div>`).join("")}</div>
+  <div class="cap"><span>${t().st.new}</span><span>${t().st.acc}</span></div></div>`;
+}
+
+function card(r){
+  const L=t(), s=SC[r.status];
+  const flags=[];
+  if(r.hasPrev) flags.push(`<span class="badge-flag">${L.prevFile}</span>`);
+  if(isBC()&&missingDocs(r)&&r.status!=="cancel") flags.push(`<span class="badge-miss">${L.missingDocs}</span>`);
+  if(r.status==="cancel"&&r.cancelReason) flags.push(`<span class="badge-miss">${L.reasonShown}: ${r.cancelReason}</span>`);
+
+  let actions=`<button class="btn ghost sm" onclick="openDetail('${r.id}',1)">${L.btnDocs}</button>`;
+  if(isBC()){
+    if(r.status==="new") actions+=`<button class="btn sm" onclick="doReview('${r.id}')">${L.btnReview}</button>`;
+    if(r.status==="review") actions+=`<button class="btn sm" onclick="openFile('${r.id}')">${L.btnOpenFile}</button>`;
+    if(r.status==="mr") actions+=`<button class="btn sm" onclick="doComplete('${r.id}')">${L.btnComplete}</button>`;
+    if(editable(r)) actions+=`<button class="btn ghost sm" onclick="openNew('${r.id}')">${L.btnEdit}</button>
+      <button class="btn ghost sm danger" onclick="openCancel('${r.id}')">${L.btnCancelRef}</button>`;
+  }else if(r.status==="done"){
+    actions+=`<button class="btn sm" onclick="openVisit('${r.id}')">${L.btnOpenVisit}</button>`;
+  }
+  actions+=`<button class="btn ghost sm" onclick="openDetail('${r.id}',0)">${L.btnDetails}</button>`;
+
+  return `<article class="card" style="--c:${s.c};--cbg:${s.bg}">
+    <div class="spine"></div>
+    <div class="card-top">
+      <div class="crow">
+        <div><div class="clinic">${clinicName(r.clinic)}</div>
+        <div class="ccode mono">${CLINICS[r.clinic].code}</div></div>
+        <span class="pill">${L.st[r.status]}</span>
+      </div>
+      <div class="refno"><span>${r.ref}</span><span>${r.recv}</span>${r.mrn?`<span>${r.mrn}</span>`:""}</div>
+    </div>
+    <div class="card-body">
+      <div class="kv wide"><div class="k">${L.k.patient}</div><div class="v">${r[LANG==="ar"?"pAr":"pEn"]}</div></div>
+      <div class="kv"><div class="k">${L.k.nid}</div><div class="v mono">${r.nid}</div></div>
+      <div class="kv"><div class="k">${L.k.age}</div><div class="v">${calcAge(r.dob)} ${L.k.yrs} · ${L.gender[r.g]}</div></div>
+      <div class="kv"><div class="k">${L.k.doctor}</div><div class="v">${r[LANG==="ar"?"doctorAr":"doctorEn"]}</div></div>
+      <div class="kv"><div class="k">${L.k.dept}</div><div class="v">${L.depts[r.dept]} · ${r[LANG==="ar"?"specAr":"specEn"]}</div></div>
+      ${flags.length?`<div class="kv wide" style="display:flex;gap:6px;flex-wrap:wrap">${flags.join("")}</div>`:""}
+    </div>
+    ${rail(r)}
+    <div class="card-foot">${actions}</div>
+  </article>`;
+}
+
+/* ================= modals ================= */
+function closeModal(){document.getElementById("modalHost").innerHTML="";}
+function shell(title,sub,body,foot,tabs){
+  return `<div class="scrim" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <header><div><h3>${title}</h3>${sub?`<div class="sub">${sub}</div>`:""}</div><button class="x" onclick="closeModal()">✕</button></header>
+    ${tabs||""}<div class="body">${body}</div>${foot?`<footer>${foot}</footer>`:""}</div></div>`;
+}
+
+let DTAB=0;
+function openDetail(id,tab){DTAB=tab||0;drawDetail(id);}
+function drawDetail(id){
+  const L=t(), r=DATA.find(x=>x.id===id);
+  const tabs=`<div class="tabs">${[L.tabs.info,L.tabs.docs,L.tabs.tl].map((n,i)=>
+    `<button class="tab ${i===DTAB?"on":""}" onclick="DTAB=${i};drawDetail('${id}')">${n}</button>`).join("")}</div>`;
+  let body="";
+  if(DTAB===0){
+    const dl=(k,v,mono)=>`<div><div class="k">${k}</div><div class="v ${mono?"mono":""}">${v}</div></div>`;
+    body=`
+    <div class="sect"><h4>${L.secRef}</h4><div class="dl">
+      ${dl(L.k.ref,r.ref,1)}${dl(L.k.received,r.recv,1)}
+      ${dl(L.clinic,clinicName(r.clinic))}${dl(L.k.clinicCode,CLINICS[r.clinic].code,1)}
+      ${dl(L.k.doctor,r[LANG==="ar"?"doctorAr":"doctorEn"])}
+      ${dl(L.k.dept,L.depts[r.dept])}${dl(L.k.spec,r[LANG==="ar"?"specAr":"specEn"])}
+      ${dl(L.status,L.st[r.status])}
+    </div></div>
+    <div class="sect"><h4>${L.secPatient}</h4><div class="dl">
+      ${dl(L.k.patient,r[LANG==="ar"?"pAr":"pEn"])}${dl(L.k.nid,r.nid,1)}
+      ${dl(L.k.dob,r.dob,1)}${dl(L.k.age,calcAge(r.dob)+" "+L.k.yrs)}${dl(L.k.gender,L.gender[r.g])}
+      ${dl(L.k.phone,r.phone,1)}${dl(L.k.nat,r[LANG==="ar"?"natAr":"natEn"])}
+      ${dl(L.k.mrn,r.mrn||"—",1)}
+    </div></div>
+    <div class="sect"><h4>${L.secIns}</h4><div class="dl">
+      ${dl(L.k.payer,r[LANG==="ar"?"payerAr":"payerEn"])}${dl(L.k.insCode,r.ins,1)}
+    </div></div>`;
+  }else if(DTAB===1){
+    const rowsD=DOCLIST.map(([k,req])=>{
+      const on=r.docs[k];
+      return `<div class="doc"><div class="ic">PDF</div>
+        <div><div class="nm">${L.docNames[k]}</div>
+        <div class="mt">${req?L.req:L.opt}${on?" · 1.2 MB · 2026‑07‑16":""}</div></div>
+        <div class="st">${on?`<span class="tag-ok">${L.uploaded}</span><button class="btn ghost sm" onclick="preview('${L.docNames[k]}')">${L.btnDocs}</button>`
+          :`<span class="tag-${req?"no":"opt"}">${L.missing}</span>`}</div></div>`;
+    }).join("");
+    body=`${isBC()?`<div class="note ${missingDocs(r)?"warn":""}" style="margin-bottom:12px"><span>●</span><span>${L.docsHint}</span></div>`:""}
+      ${rowsD}<div id="pv"></div>`;
+  }else{
+    body=`<div class="tl">${r.timeline.map(e=>`
+      <div class="ev"><div class="dot" style="--c:${SC[e.st].c}"></div>
+      <div class="t">${L.st[e.st]}</div>
+      <div class="n">${e.st==="new"?L.tlNew:e.st==="review"?L.tlReview:e.st==="mr"?(e.upd?L.tlMrU:L.tlMr):
+        e.st==="done"?L.tlDone:e.st==="cancel"?L.tlCancel:e.st==="edit"?L.tlEdit:L.tlAcc}
+        ${e.reason?`<div style="margin-top:3px"><b>${L.reasonShown}:</b> ${e.reason}</div>`:""}</div>
+      <div class="m">${e.when} · ${L.by} ${LANG==="ar"?e.ar:e.en} · ${L.empNo} ${e.no}</div></div>`).join("")}</div>`;
+  }
+  let foot="";
+  if(isBC()){
+    if(r.status==="new") foot=`<button class="btn" onclick="doReview('${r.id}')">${L.btnReview}</button>`;
+    if(r.status==="review") foot=`<button class="btn" onclick="openFile('${r.id}')">${L.btnOpenFile}</button>`;
+    if(r.status==="mr") foot=`<button class="btn" onclick="doComplete('${r.id}')">${L.btnComplete}</button>`;
+    if(editable(r)) foot+=`<button class="btn ghost" onclick="openNew('${r.id}')">${L.btnEdit}</button>
+      <button class="btn ghost danger" onclick="openCancel('${r.id}')">${L.btnCancelRef}</button>`;
+    if(r.status==="done") foot=`<span style="font-size:12.5px;color:var(--ink-3);align-self:center">${L.lockedNote}</span>`;
+  }else if(r.status==="done"){
+    foot=`<button class="btn" onclick="openVisit('${r.id}')">${L.btnOpenVisit}</button>`;
+  }
+  document.getElementById("modalHost").innerHTML=shell(r[LANG==="ar"?"pAr":"pEn"],`${r.ref} · ${r.nid}`,body,foot,tabs);
+}
+function preview(n){document.getElementById("pv").innerHTML=`<div class="viewer">[ ${n} ]<br><br>${t().viewerNote}</div>`;}
+
+/* ---- status actions (Business Center) ---- */
+function doReview(id){
+  const r=DATA.find(x=>x.id===id); r.status="review"; log(r,"review");
+  closeModal(); render(); toast(t().tReview);
+}
+function doComplete(id){
+  const r=DATA.find(x=>x.id===id), L=t();
+  if(missingDocs(r)){toast(L.needDocs);return;}
+  if(!r.mrn){toast(L.needMr);return;}
+  r.status="done"; log(r,"done"); closeModal(); render(); toast(L.tDone);
+}
+
+/* ---- HIS patient file screen ---- */
+function openFile(id){
+  const r=DATA.find(x=>x.id===id), L=t(), upd=r.hasPrev;
+  const f=(k,v,mono)=>`<div class="fld"><label>${k}</label><input value="${v}" ${mono?'class="mono"':""}></div>`;
+  const body=`
+    <div class="note ${upd?"warn":""}" style="margin-bottom:14px"><span>●</span><span>${upd?L.fileNoteUpd:L.fileNote}</span></div>
+    <div class="his"><div class="bar"><span></span><span></span><span></span>&nbsp;HIS · Patient Registration</div>
+    <div class="screen">
+      <div class="fgrid">
+        ${f(L.k.patient,r[LANG==="ar"?"pAr":"pEn"])}
+        ${f(L.k.nid,r.nid,1)}
+        <div class="fld"><label>${L.k.dob} <i>*</i></label>
+          <input id="fl_dob" type="date" max="${new Date().toISOString().slice(0,10)}" value="${r.dob||""}" oninput="syncFileAge()"></div>
+        <div class="fld"><label>${L.k.age}</label>
+          <input id="fl_age" class="mono" value="${r.dob?calcAge(r.dob)+" "+L.k.yrs:""}" placeholder="${L.dobAuto}" readonly style="background:#EEF2F4;color:var(--ink-3)"></div>
+        ${f(L.k.gender,L.gender[r.g])}
+        ${f(L.k.phone,r.phone,1)}
+        ${f(L.k.nat,r[LANG==="ar"?"natAr":"natEn"])}
+        ${f(L.k.payer,r[LANG==="ar"?"payerAr":"payerEn"])}
+        ${f(L.k.insCode,r.ins,1)}
+        ${f(L.clinic,clinicName(r.clinic))}
+        ${f(L.k.clinicCode,CLINICS[r.clinic].code,1)}
+        ${f(L.k.doctor,r[LANG==="ar"?"doctorAr":"doctorEn"])}
+        ${f(L.k.dept,L.depts[r.dept]+" · "+r[LANG==="ar"?"specAr":"specEn"])}
+      </div>
+    </div></div>`;
+  const foot=`<button class="btn" onclick="saveFile('${r.id}')">${upd?L.fileUpd:L.fileSave}</button>
+              <button class="btn ghost" onclick="closeModal()">${L.cancel}</button>`;
+  document.getElementById("modalHost").innerHTML=shell(upd?L.fileTitleUpd:L.fileTitle,r.ref+" · "+r.nid,body,foot);
+}
+function syncFileAge(){
+  const d=document.getElementById("fl_dob").value, a=calcAge(d);
+  document.getElementById("fl_age").value=a===""?"":a+" "+t().k.yrs;
+}
+function saveFile(id){
+  const r=DATA.find(x=>x.id===id), L=t();
+  const dob=document.getElementById("fl_dob").value;
+  if(!dob){ document.getElementById("fl_dob").focus(); toast(L.needDob); return; }
+  r.dob=dob;
+  if(!r.mrn) r.mrn="MRN‑"+(889300+Math.floor(Math.random()*400));
+  r.status="mr"; log(r,"mr",r.hasPrev);
+  closeModal(); render(); toast((r.hasPrev?L.tMrU:L.tMr)+r.mrn);
+}
+
+/* ---- department: open visit ---- */
+function openVisit(id){
+  const r=DATA.find(x=>x.id===id), L=t();
+  const body=`<div class="note" style="margin-bottom:14px"><span>●</span><span>${L.visitNote}</span></div>
+    <div class="dl">
+      <div><div class="k">${L.k.patient}</div><div class="v">${r[LANG==="ar"?"pAr":"pEn"]}</div></div>
+      <div><div class="k">${L.k.nid}</div><div class="v mono">${r.nid}</div></div>
+      <div><div class="k">${L.k.mrn}</div><div class="v mono">${r.mrn}</div></div>
+      <div><div class="k">${L.k.dept}</div><div class="v">${L.depts[r.dept]} · ${r[LANG==="ar"?"specAr":"specEn"]}</div></div>
+      <div><div class="k">${L.k.payer}</div><div class="v">${r[LANG==="ar"?"payerAr":"payerEn"]}</div></div>
+      <div><div class="k">${L.k.insCode}</div><div class="v mono">${r.ins}</div></div>
+    </div>`;
+  const foot=`<button class="btn" onclick="doAccept('${r.id}')">${L.visitConfirm}</button>
+              <button class="btn ghost" onclick="closeModal()">${L.cancel}</button>`;
+  document.getElementById("modalHost").innerHTML=shell(L.visitTitle,r.ref,body,foot);
+}
+function doAccept(id){
+  const r=DATA.find(x=>x.id===id); r.status="acc"; log(r,"acc");
+  closeModal(); render(); toast(t().tAcc);
+}
+
+/* ---- cancel referral (Business Center, before completion) ---- */
+function openCancel(id){
+  const r=DATA.find(x=>x.id===id), L=t();
+  if(!editable(r)){toast(L.lockedNote);return;}
+  const body=`<div class="note warn" style="margin-bottom:14px"><span>●</span><span>${L.cancelNote}</span></div>
+    <div class="dl" style="margin-bottom:16px">
+      <div><div class="k">${L.k.patient}</div><div class="v">${r[LANG==="ar"?"pAr":"pEn"]}</div></div>
+      <div><div class="k">${L.k.nid}</div><div class="v mono">${r.nid}</div></div>
+      <div><div class="k">${L.k.ref}</div><div class="v mono">${r.ref}</div></div>
+      <div><div class="k">${L.status}</div><div class="v">${L.st[r.status]}</div></div>
+    </div>
+    <div class="fld" style="margin-bottom:10px"><label>${L.reasonLbl} <i>*</i></label>
+      <select id="c_pick" onchange="pickReason()">
+        <option value="">${L.reasonPick}</option>
+        ${L.reasons.map(x=>`<option>${x}</option>`).join("")}
+      </select></div>
+    <div class="fld"><label>${L.reasonLbl} <i>*</i></label>
+      <input id="c_reason" placeholder="${L.reasonPh}"></div>`;
+  const foot=`<button class="btn solid-danger" onclick="doCancel('${r.id}')">${L.cancelConfirm}</button>
+              <button class="btn ghost" onclick="closeModal()">${L.cancel}</button>`;
+  document.getElementById("modalHost").innerHTML=shell(L.cancelTitle,r.ref+" · "+r.nid,body,foot);
+}
+function pickReason(){
+  const p=document.getElementById("c_pick").value;
+  if(p&&!/آخر|Other/.test(p)) document.getElementById("c_reason").value=p;
+  else document.getElementById("c_reason").focus();
+}
+function doCancel(id){
+  const r=DATA.find(x=>x.id===id), L=t();
+  const why=document.getElementById("c_reason").value.trim();
+  if(!why){ toast(L.needReason); document.getElementById("c_reason").focus(); return; }
+  r.status="cancel"; r.cancelReason=why; log(r,"cancel",false,why);
+  closeModal(); render(); toast(L.tCancelled);
+}
+
+/* ---- new / edit referral (Business Center) ---- */
+const NEWDOCS={form:false,report:false,letter:false,other:false};
+let EDITID=null;
+function openNew(editId){
+  const L=t();
+  EDITID=editId||null;
+  const e=EDITID?DATA.find(x=>x.id===EDITID):null;
+  if(e&&!editable(e)){toast(L.lockedNote);return;}
+  Object.keys(NEWDOCS).forEach(k=>NEWDOCS[k]=e?!!e.docs[k]:false);
+  const V={clinic:e?e.clinic:0,doc:e?e[LANG==="ar"?"doctorAr":"doctorEn"]:"",dept:e?e.dept:"opd",
+    spec:e?e[LANG==="ar"?"specAr":"specEn"]:"",name:e?e[LANG==="ar"?"pAr":"pEn"]:"",nid:e?e.nid:"",
+    dob:e?(e.dob||""):"",g:e?e.g:"m",ph:e?e.phone:"",nat:e?e[LANG==="ar"?"natAr":"natEn"]:(LANG==="ar"?"سعودي":"Saudi"),
+    pay:e?e[LANG==="ar"?"payerAr":"payerEn"]:"",ins:e?e.ins:""};
+  const sel=(id,opts)=>`<select id="${id}">${opts}</select>`;
+  const body=`
+   <div class="sect"><h4>${L.secRef}</h4><div class="fgrid">
+     <div class="fld"><label>${L.clinic} <i>*</i></label>${sel("n_clinic",CLINICS.map((c,i)=>`<option value="${i}" ${i===V.clinic?"selected":""}>${c[LANG]} — ${c.code}</option>`).join(""))}</div>
+     <div class="fld"><label>${L.k.doctor} <i>*</i></label><input id="n_doc" value="${V.doc}"></div>
+     <div class="fld"><label>${L.k.dept} <i>*</i></label>${sel("n_dept",Object.keys(L.depts).map(k=>`<option value="${k}" ${k===V.dept?"selected":""}>${L.depts[k]}</option>`).join(""))}</div>
+     <div class="fld"><label>${L.k.spec} <i>*</i></label><input id="n_spec" value="${V.spec}"></div>
+   </div></div>
+   <div class="sect"><h4>${L.secPatient}</h4><div class="fgrid">
+     <div class="fld"><label>${L.k.patient} <i>*</i></label><input id="n_name" value="${V.name}"></div>
+     <div class="fld"><label>${L.k.nid} <i>*</i></label><input id="n_nid" class="mono" maxlength="10" value="${V.nid}"></div>
+     <div class="fld"><label>${L.k.dob} <i>*</i></label><input id="n_dob" type="date" max="${new Date().toISOString().slice(0,10)}" value="${V.dob}" oninput="syncAge()"></div>
+     <div class="fld"><label>${L.k.age}</label><input id="n_age" class="mono" value="${V.dob?calcAge(V.dob)+" "+L.k.yrs:""}" placeholder="${L.dobAuto}" readonly style="background:#EEF2F4;color:var(--ink-3)"></div>
+     <div class="fld"><label>${L.k.gender} <i>*</i></label>${sel("n_g",`<option value="m" ${V.g==="m"?"selected":""}>${L.gender.m}</option><option value="f" ${V.g==="f"?"selected":""}>${L.gender.f}</option>`)}</div>
+     <div class="fld"><label>${L.k.phone} <i>*</i></label><input id="n_ph" class="mono" value="${V.ph}"></div>
+     <div class="fld"><label>${L.k.nat} <i>*</i></label><input id="n_nat" value="${V.nat}"></div>
+   </div></div>
+   <div class="sect"><h4>${L.secIns}</h4><div class="fgrid">
+     <div class="fld"><label>${L.k.payer} <i>*</i></label><input id="n_pay" value="${V.pay}"></div>
+     <div class="fld"><label>${L.k.insCode} <i>*</i></label><input id="n_ins" class="mono" value="${V.ins}"></div>
+   </div></div>
+   <div class="sect"><h4>${L.tabs.docs}</h4>
+     <div class="note" style="margin-bottom:10px"><span>●</span><span>${L.docsHint}</span></div>
+     ${DOCLIST.map(([k,req])=>`
+       <div class="upl ${NEWDOCS[k]?"done":""}" id="u_${k}">
+         <div class="ic" style="width:28px;height:28px;border-radius:7px;display:grid;place-items:center;font-family:var(--mono);font-size:9.5px;background:#fff;border:1px solid var(--line)">PDF</div>
+         <div><div style="font-size:13px;font-weight:500">${L.docNames[k]}</div>
+         <div class="mono" style="font-size:10.5px;color:var(--ink-3)" id="s_${k}">${NEWDOCS[k]?L.uploaded+" · 1.2 MB":(req?L.req:L.opt)}</div></div>
+         <div style="margin-inline-start:auto"><button class="btn ghost sm" onclick="fakeUp('${k}')">${NEWDOCS[k]?(LANG==="ar"?"استبدال":"Replace"):(LANG==="ar"?"إرفاق":"Attach")}</button></div>
+       </div>`).join("")}
+   </div>`;
+  const foot=`<button class="btn" onclick="saveNew()">${EDITID?L.editSave:L.newSave}</button>
+              <button class="btn ghost" onclick="closeModal()">${L.cancel}</button>`;
+  document.getElementById("modalHost").innerHTML=shell(EDITID?L.editTitle:L.newTitle,EDITID?e.ref+" · "+e.nid:"",body,foot);
+}
+function fakeUp(k){
+  NEWDOCS[k]=true;
+  const row=document.getElementById("u_"+k);
+  row.classList.add("done");
+  document.getElementById("s_"+k).textContent=t().uploaded+" · 1.2 MB";
+  row.querySelector("button").textContent=LANG==="ar"?"استبدال":"Replace";
+}
+function syncAge(){
+  const d=document.getElementById("n_dob").value;
+  const a=calcAge(d);
+  document.getElementById("n_age").value=a===""?"":a+" "+t().k.yrs;
+}
+function saveNew(){
+  const L=t(), v=id=>document.getElementById(id).value.trim();
+  const req=["n_doc","n_spec","n_name","n_nid","n_ph","n_nat","n_pay","n_ins"];
+  for(const id of req){ if(!v(id)){ document.getElementById(id).focus(); toast(LANG==="ar"?"أكمل الحقول الإلزامية":"Complete the required fields"); return; } }
+  if(!v("n_dob")){ document.getElementById("n_dob").focus(); toast(L.needDob); return; }
+  const nid=v("n_nid");
+
+  if(EDITID){                                  // تعديل تحويل قائم
+    const r=DATA.find(x=>x.id===EDITID);
+    Object.assign(r,{clinic:+v("n_clinic"),doctorAr:v("n_doc"),doctorEn:v("n_doc"),
+      pAr:v("n_name"),pEn:v("n_name"),nid,dob:v("n_dob"),g:v("n_g"),phone:v("n_ph"),
+      natAr:v("n_nat"),natEn:v("n_nat"),payerAr:v("n_pay"),payerEn:v("n_pay"),ins:v("n_ins"),
+      dept:v("n_dept"),specAr:v("n_spec"),specEn:v("n_spec"),docs:{...NEWDOCS}});
+    log(r,"edit"); EDITID=null;
+    closeModal(); render(); toast(t().tEdited); return;
+  }
+
+  const prev=DATA.some(r=>r.nid===nid);
+  const r=mk({clinic:+v("n_clinic"),doctorAr:v("n_doc"),doctorEn:v("n_doc"),
+    pAr:v("n_name"),pEn:v("n_name"),nid,dob:v("n_dob"),g:v("n_g"),phone:v("n_ph"),
+    natAr:v("n_nat"),natEn:v("n_nat"),payerAr:v("n_pay"),payerEn:v("n_pay"),ins:v("n_ins"),
+    dept:v("n_dept"),specAr:v("n_spec"),specEn:v("n_spec"),recv:now(),status:"new",
+    docs:{...NEWDOCS},hasPrev:prev});
+  DATA.unshift(r); log(r,"new");
+  closeModal(); render(); toast(L.tSaved);
+}
+
+/* ================= user guide ================= */
+const chip=(s)=>`<span class="chip" style="--c:${SC[s].c};--cbg:${SC[s].bg}">${t().st[s]}</span>`;
+
+const GUIDE={
+ ar:()=>`
+ <div class="toc">
+   ${[["g1","نظرة عامة"],["g2","كيف تبدأ التجربة"],["g3","الأدوار والصلاحيات"],["g4","مراحل التحويل"],
+      ["g5","مسار مركز الأعمال"],["g6","مسار الأقسام"],["g7","المستندات"],["g8","التعديل والإلغاء"],
+      ["g9","البحث والتصفية"],["g10","بطاقة الحالة"],["g11","سجل التتبع"],["g12","الملف السابق"],
+      ["g13","حدود المحاكي"]].map(([id,n])=>`<button onclick="jump('${id}')">${n}</button>`).join("")}
+ </div>
+ <div class="guide">
+
+ <section id="g1"><h5><em>1</em> نظرة عامة</h5>
+  <p>هذا محاكي (Prototype) للوحة بيانات التحويلات داخل نظام <b>HIS</b>. الهدف منه استبدال آلية استقبال التحويلات عبر البريد الإلكتروني بمسار إلكتروني موحد، يبدأ من استلام طلب التحويل من الجهة المتعاقدة وينتهي بحضور المريض وفتح الكشف له.</p>
+  <p>المحاكي يوضح ثلاثة أشياء: <b>شكل الشاشات</b>، <b>تسلسل الإجراءات</b>، و<b>صلاحيات كل جهة</b>. البيانات المعروضة فيه وهمية وللتجربة فقط.</p>
+ </section>
+
+ <section id="g2"><h5><em>2</em> كيف تبدأ التجربة</h5>
+  <ol>
+   <li>من الشريط العلوي، اختر <b>الدور</b> الذي تريد تجربته: مركز الأعمال، العيادات الخارجية، الطوارئ، أو مكتب التنويم. تتغير الشاشة والصلاحيات فوراً.</li>
+   <li>بجانب الدور يظهر <b>اسم المستخدم والرقم الوظيفي</b> — وهو المستخدم الذي ستُسجَّل باسمه كل الإجراءات في سجل التتبع.</li>
+   <li>زر <code>EN</code> يبدّل الواجهة بين العربية والإنجليزية مع تغيير اتجاه الصفحة كاملاً.</li>
+   <li>ابدأ بدور <b>مركز الأعمال</b>، أنشئ تحويلاً وأكمل مساره، ثم بدّل إلى دور قسم لتشاهد كيف تظهر الحالة عندهم.</li>
+  </ol>
+ </section>
+
+ <section id="g3"><h5><em>3</em> الأدوار والصلاحيات</h5>
+  <table class="gt"><tr><th>الإجراء</th><th>مركز الأعمال</th><th>العيادات / الطوارئ / التنويم</th></tr>
+   <tr><td>إدخال تحويل جديد</td><td>نعم</td><td>لا</td></tr>
+   <tr><td>رفع المستندات</td><td>نعم</td><td>لا</td></tr>
+   <tr><td>مراجعة البيانات والمستندات</td><td>نعم</td><td>لا</td></tr>
+   <tr><td>فتح ملف المريض في HIS</td><td>نعم</td><td>لا</td></tr>
+   <tr><td>اعتماد الحالة كمكتملة</td><td>نعم</td><td>لا</td></tr>
+   <tr><td>تعديل التحويل أو إلغاؤه</td><td>نعم (قبل الاكتمال)</td><td>لا</td></tr>
+   <tr><td>استعراض الحالات المكتملة ومرفقاتها</td><td>نعم</td><td>نعم</td></tr>
+   <tr><td>فتح كشف عند حضور المريض</td><td>لا</td><td>نعم</td></tr>
+  </table>
+  <div class="callout">العيادات الخارجية والطوارئ ومكتب التنويم لهم <b>نفس الصلاحية تماماً</b>: اطّلاع على الحالات المكتملة + فتح كشف. لا يشاركون في المراجعة ولا يغيّرون أي مرحلة قبل ذلك.</div>
+ </section>
+
+ <section id="g4"><h5><em>4</em> مراحل التحويل</h5>
+  <table class="gt"><tr><th>المرحلة</th><th>متى تُسجَّل</th><th>من يغيّرها</th></tr>
+   <tr><td>${chip("new")}</td><td>عند إدخال طلب التحويل في النظام</td><td>تلقائي عند الحفظ</td></tr>
+   <tr><td>${chip("review")}</td><td>عند بدء مراجعة البيانات والمستندات</td><td>مركز الأعمال</td></tr>
+   <tr><td>${chip("mr")}</td><td>بعد إنشاء ملف المريض أو تحديث ملفه القائم</td><td>مركز الأعمال</td></tr>
+   <tr><td>${chip("done")}</td><td>بعد اكتمال كل المتطلبات — <b>هنا تظهر الحالة للأقسام</b></td><td>مركز الأعمال</td></tr>
+   <tr><td>${chip("acc")}</td><td>عند حضور المريض وفتح الكشف له</td><td>العيادة / الطوارئ / التنويم</td></tr>
+   <tr><td>${chip("cancel")}</td><td>عند إلغاء الطلب قبل اكتماله، مع تسجيل السبب</td><td>مركز الأعمال</td></tr>
+  </table>
+  <p>ترتيب المراحل مقصود: <b>فتح الملف يسبق الاعتماد</b>، لأن القسم يحتاج ملفاً موجوداً ورقم ملف طبي حتى يستطيع فتح الكشف مباشرة عند حضور المريض.</p>
+  <p>يظهر شريط صغير أسفل كل بطاقة يوضح موقع الحالة من المراحل الخمس. في التحويل الملغي يظهر الشريط رمادياً بالكامل.</p>
+ </section>
+
+ <section id="g5"><h5><em>5</em> مسار مركز الأعمال — خطوة بخطوة</h5>
+  <ol>
+   <li><b>إدخال التحويل:</b> اضغط <code>+ تحويل جديد</code>، ثم عبّئ بيانات التحويل (الجهة المحوّلة، الطبيب، الجهة المستقبِلة، التخصص)، وبيانات المريض، وبيانات التأمين، وارفع المستندات. الحقول المعلّمة بـ <b>*</b> إلزامية، ومنها <b>تاريخ الميلاد</b> الذي لا يمكن الحفظ بدونه. الحالة تصبح ${chip("new")}.</li>
+   <li><b>بدء المراجعة:</b> من البطاقة اضغط <code>بدء المراجعة</code> لتصبح الحالة ${chip("review")}، ويُسجَّل اسمك ورقمك الوظيفي في سجل التتبع.</li>
+   <li><b>فتح الملف:</b> اضغط <code>فتح ملف</code> لتفتح شاشة تسجيل المريض في HIS <b>معبّأة تلقائياً</b> من بطاقة التحويل. <b>تاريخ الميلاد إلزامي هنا أيضاً</b>، ولن يُحفظ الملف بدونه. راجع البيانات واحفظ، فيصدر رقم ملف طبي (MRN) وتصبح الحالة ${chip("mr")}.</li>
+   <li><b>الاعتماد:</b> اضغط <code>اعتماد كمكتمل</code>. تصبح الحالة ${chip("done")} وتظهر فوراً في لوحات الأقسام.</li>
+  </ol>
+  <div class="callout warn">زر الاعتماد يرفض التنفيذ في حالتين: وجود <b>مستند إلزامي ناقص</b>، أو <b>عدم فتح ملف المريض</b> بعد. ستظهر لك رسالة توضح السبب.</div>
+  <div class="callout"><b>تاريخ الميلاد:</b> حقل إلزامي في موضعين — عند إدخال التحويل الجديد أو تعديله، وعند فتح ملف المريض. <b>العمر لا يُكتب يدوياً</b> بل يُحتسب تلقائياً من تاريخ الميلاد ويظهر في حقل للقراءة فقط، فيبقى صحيحاً دائماً مهما طالت مدة الحالة.</div>
+ </section>
+
+ <section id="g6"><h5><em>6</em> مسار الأقسام — العيادات والطوارئ والتنويم</h5>
+  <ol>
+   <li>عند اختيار أي من هذه الأدوار، تعرض اللوحة <b>الحالات المكتملة والمقبولة فقط</b>. لا تظهر الحالات الجديدة ولا قيد المراجعة ولا الملغاة.</li>
+   <li>عند حضور المريض، ابحث <b>برقم الهوية</b> أو باسمه.</li>
+   <li>افتح <code>المرفقات</code> أو <code>التفاصيل</code> للاطلاع على نموذج التحويل والتقارير قبل الاستقبال.</li>
+   <li>اضغط <code>فتح كشف</code>، وستظهر نافذة تأكيد فيها بيانات المريض ورقم ملفه وجهة التأمين. بعد التأكيد تصبح الحالة ${chip("acc")}.</li>
+  </ol>
+ </section>
+
+ <section id="g7"><h5><em>7</em> المستندات</h5>
+  <table class="gt"><tr><th>المستند</th><th>الحالة</th><th>الأثر</th></tr>
+   <tr><td>نموذج التحويل</td><td><b>إلزامي</b></td><td>يمنع اعتماد الحالة إذا كان ناقصاً</td></tr>
+   <tr><td>التقرير الطبي</td><td><b>إلزامي</b></td><td>يمنع اعتماد الحالة إذا كان ناقصاً</td></tr>
+   <tr><td>خطاب العلاج / الخطة العلاجية</td><td>اختياري</td><td>لا يمنع الاعتماد ولا يُظهر أي تنبيه</td></tr>
+   <tr><td>مستندات داعمة أخرى</td><td>اختياري</td><td>لا يمنع الاعتماد ولا يُظهر أي تنبيه</td></tr>
+  </table>
+  <p>في تبويب <b>المرفقات</b> يظهر أمام كل مستند وسم: <b>مرفوع</b> (أخضر)، أو <b>غير مرفوع</b> بالأحمر للإلزامي وبالرمادي المحايد للاختياري. أي بطاقة ينقصها مستند إلزامي تحمل وسم <b>«مستندات ناقصة»</b>، وهذا الوسم يظهر لمركز الأعمال فقط.</p>
+  <p>الضغط على <code>عرض المرفقات</code> بجانب مستند مرفوع يفتح معاينة تجريبية له داخل الشاشة نفسها.</p>
+ </section>
+
+ <section id="g8"><h5><em>8</em> التعديل والإلغاء</h5>
+  <p><b>التعديل:</b> متاح لمركز الأعمال في مراحل ${chip("new")} ${chip("review")} ${chip("mr")} فقط. زر <code>تعديل</code> يفتح نموذج الإدخال معبّأً بالكامل، ويمكن تصحيح البيانات أو رفع المستندات الناقصة، وتُسجَّل عملية التعديل في سجل التتبع.</p>
+  <p><b>القفل بعد الاكتمال:</b> بمجرد أن تصبح الحالة ${chip("done")} وتنتقل للأقسام، يختفي زرّا التعديل والإلغاء نهائياً وتظهر رسالة توضح أن الحالة مقفلة.</p>
+  <p><b>الإلغاء:</b> زر <code>إلغاء التحويل</code> يفتح نافذة فيها قائمة أسباب جاهزة وحقل نصي. <b>لا يمكن الحفظ بدون سبب.</b> بعد الإلغاء:</p>
+  <ul>
+   <li>تصبح الحالة ${chip("cancel")} ولها عدّاد وفلتر مستقلان.</li>
+   <li>يظهر سبب الإلغاء على البطاقة وداخل سجل التتبع مع اسم الموظف ورقمه الوظيفي والوقت.</li>
+   <li>لا تظهر الحالة للأقسام إطلاقاً، وتبقى عند مركز الأعمال للتتبع والإحصاء.</li>
+  </ul>
+ </section>
+
+ <section id="g9"><h5><em>9</em> البحث والتصفية والعدّادات</h5>
+  <ul>
+   <li><b>حقل البحث</b> يبحث في: رقم الهوية، اسم المريض، اسم العيادة أو المركز، كود الجهة المحوّلة، رقم التحويل، ورقم الملف الطبي.</li>
+   <li><b>قائمة العيادة</b> لتصفية الحالات حسب الجهة المحوّلة.</li>
+   <li><b>قائمة الحالة</b> لتصفية الحالات حسب المرحلة.</li>
+   <li><b>بطاقات العدّادات</b> أعلى الشاشة تعرض عدد الحالات في كل مرحلة، والضغط على أي عدّاد يطبّق تصفيته مباشرة، والضغط عليه مرة أخرى يلغيها.</li>
+   <li><code>مسح التصفية</code> يعيد العرض إلى كل الحالات.</li>
+  </ul>
+ </section>
+
+ <section id="g10"><h5><em>10</em> بطاقة الحالة</h5>
+  <p>كل تحويل يظهر كبطاقة مستقلة تحتوي على:</p>
+  <ul>
+   <li>اسم العيادة أو المركز المحوّل وكوده.</li>
+   <li>رقم التحويل، تاريخ ووقت الاستلام، ورقم الملف الطبي بعد إصداره.</li>
+   <li>اسم المريض، رقم الهوية، والعمر المحتسب من تاريخ الميلاد مع الجنس (وتاريخ الميلاد نفسه يظهر في تبويب التفاصيل).</li>
+   <li>اسم الطبيب المعالج، والجهة المستقبِلة مع التخصص.</li>
+   <li>وسم المرحلة الحالية بلون مميز، وشريط تقدّم يوضح موقعها من المراحل الخمس.</li>
+   <li>أزرار الإجراءات المتاحة لدورك الحالي فقط.</li>
+  </ul>
+  <p>تبويب <b>تفاصيل</b> يعرض باقي البيانات: الجوال، الجنسية، الجهة الدافعة، وكود التأمين.</p>
+ </section>
+
+ <section id="g11"><h5><em>11</em> سجل التتبع</h5>
+  <p>داخل كل بطاقة تبويب <b>سجل التتبع</b> يعرض تاريخ الحالة كاملاً بترتيب زمني. كل حدث يسجّل: <b>المرحلة</b>، <b>وصف الإجراء</b>، <b>اسم الموظف</b>، <b>الرقم الوظيفي</b>، و<b>التاريخ والوقت</b>. تُسجَّل أيضاً عمليات التعديل والإلغاء مع السبب، مما يتيح تتبع كل حالة من لحظة استلام التحويل حتى فتح الكشف.</p>
+ </section>
+
+ <section id="g12"><h5><em>12</em> المريض صاحب ملف سابق</h5>
+  <p>إذا كان رقم الهوية مسجلاً مسبقاً، تحمل البطاقة وسم <b>«ملف سابق موجود»</b>. عند الضغط على <code>فتح ملف</code> يتغير عنوان الشاشة إلى <b>تحديث ملف المريض</b>، ولا يُنشأ ملف جديد، بل تُحدَّث بياناته وكود التأمين على الملف القائم. ويُسجَّل ذلك في سجل التتبع كتحديث لا كإنشاء.</p>
+  <p>لتجربتها: حالة <b>سعد فهد الشمري</b> معلّمة بملف سابق.</p>
+ </section>
+
+ <section id="g13"><h5><em>13</em> حدود المحاكي</h5>
+  <ul>
+   <li>جميع البيانات والأسماء والأرقام <b>وهمية</b> لأغراض العرض.</li>
+   <li>لا يوجد ربط فعلي مع HIS؛ شاشة تسجيل المريض تمثيلية، وأرقام الملفات تُولَّد عشوائياً.</li>
+   <li>رفع المستندات محاكاة فقط، ولا تُرفع ملفات حقيقية، والمعاينة تمثيلية.</li>
+   <li>لا يوجد تسجيل دخول؛ تبديل الدور يدوي لغرض العرض فقط.</li>
+   <li><b>أي تغييرات تجريها تُفقد عند إعادة تحميل الصفحة</b> وتعود البيانات لحالتها الأصلية.</li>
+  </ul>
+ </section>
+ </div>`,
+
+ en:()=>`
+ <div class="toc">
+   ${[["g1","Overview"],["g2","Getting started"],["g3","Roles"],["g4","Referral stages"],
+      ["g5","Business Center flow"],["g6","Department flow"],["g7","Documents"],["g8","Edit & cancel"],
+      ["g9","Search & filters"],["g10","The case card"],["g11","Audit trail"],["g12","Existing files"],
+      ["g13","Prototype limits"]].map(([id,n])=>`<button onclick="jump('${id}')">${n}</button>`).join("")}
+ </div>
+ <div class="guide">
+
+ <section id="g1"><h5><em>1</em> Overview</h5>
+  <p>This is a working prototype of the referral worklist inside the <b>HIS</b>. It replaces email-based referral intake with a single electronic path that starts when a contracted provider sends a referral and ends when the patient arrives and a visit is opened.</p>
+  <p>The prototype demonstrates three things: <b>what the screens look like</b>, <b>the order of steps</b>, and <b>what each role may do</b>. All data shown is fictional and for demonstration only.</p>
+ </section>
+
+ <section id="g2"><h5><em>2</em> Getting started</h5>
+  <ol>
+   <li>In the top bar, pick the <b>role</b> you want to try: Business Center, Outpatient Clinics, Emergency, or Admission Office. The screen and permissions change immediately.</li>
+   <li>Next to the role you'll see the <b>user name and employee number</b> — every action is recorded in the audit trail under that user.</li>
+   <li>The <code>عربي</code> button switches the interface between English and Arabic, including full page direction.</li>
+   <li>Start as the <b>Business Center</b>, create a referral and take it through the full path, then switch to a department role to see how the case appears to them.</li>
+  </ol>
+ </section>
+
+ <section id="g3"><h5><em>3</em> Roles and permissions</h5>
+  <table class="gt"><tr><th>Action</th><th>Business Center</th><th>Clinics / ER / Admission</th></tr>
+   <tr><td>Create a referral</td><td>Yes</td><td>No</td></tr>
+   <tr><td>Upload documents</td><td>Yes</td><td>No</td></tr>
+   <tr><td>Review data and documents</td><td>Yes</td><td>No</td></tr>
+   <tr><td>Create the patient file in HIS</td><td>Yes</td><td>No</td></tr>
+   <tr><td>Mark the case complete</td><td>Yes</td><td>No</td></tr>
+   <tr><td>Edit or cancel a referral</td><td>Yes (before completion)</td><td>No</td></tr>
+   <tr><td>View completed cases and attachments</td><td>Yes</td><td>Yes</td></tr>
+   <tr><td>Open a visit on patient arrival</td><td>No</td><td>Yes</td></tr>
+  </table>
+  <div class="callout">Outpatient clinics, the emergency department and the admission office share <b>exactly the same permissions</b>: view completed cases and open a visit. They take no part in review and change no earlier stage.</div>
+ </section>
+
+ <section id="g4"><h5><em>4</em> Referral stages</h5>
+  <table class="gt"><tr><th>Stage</th><th>Recorded when</th><th>Set by</th></tr>
+   <tr><td>${chip("new")}</td><td>The referral is entered into the system</td><td>Automatic on save</td></tr>
+   <tr><td>${chip("review")}</td><td>Review of data and documents begins</td><td>Business Center</td></tr>
+   <tr><td>${chip("mr")}</td><td>The patient file is created or an existing one updated</td><td>Business Center</td></tr>
+   <tr><td>${chip("done")}</td><td>All requirements are met — <b>the case now appears to departments</b></td><td>Business Center</td></tr>
+   <tr><td>${chip("acc")}</td><td>The patient arrives and a visit is opened</td><td>Clinic / ER / Admission</td></tr>
+   <tr><td>${chip("cancel")}</td><td>The referral is cancelled before completion, with a recorded reason</td><td>Business Center</td></tr>
+  </table>
+  <p>The order is deliberate: <b>the file is created before completion</b>, because the department needs an existing file and an MRN to open a visit the moment the patient arrives.</p>
+  <p>A small track at the bottom of each card shows where the case sits among the five stages. For a cancelled referral the track stays fully grey.</p>
+ </section>
+
+ <section id="g5"><h5><em>5</em> Business Center flow — step by step</h5>
+  <ol>
+   <li><b>Enter the referral:</b> click <code>+ New referral</code>, then fill in referral details (referring provider, doctor, receiving unit, specialty), patient details, insurance details, and upload the documents. Fields marked <b>*</b> are required — including <b>date of birth</b>, without which nothing can be saved. The case becomes ${chip("new")}.</li>
+   <li><b>Start review:</b> click <code>Start review</code> on the card. The case moves to ${chip("review")} and your name and employee number are written to the audit trail.</li>
+   <li><b>Create the file:</b> click <code>Open file</code> to launch the HIS registration screen, <b>pre-filled</b> from the referral card. <b>Date of birth is required here too</b> — the file will not save without it. Review and save; an MRN is issued and the case becomes ${chip("mr")}.</li>
+   <li><b>Complete:</b> click <code>Mark complete</code>. The case becomes ${chip("done")} and appears instantly on the department worklists.</li>
+  </ol>
+  <div class="callout warn">Completion is blocked in two situations: a <b>required document is missing</b>, or the <b>patient file has not been created</b> yet. A message explains which one applies.</div>
+  <div class="callout"><b>Date of birth</b> is mandatory in two places: when a referral is created or edited, and on the patient file screen. <b>Age is never typed manually</b> — it is calculated from the date of birth and shown in a read-only field, so it stays correct however long the case remains open.</div>
+ </section>
+
+ <section id="g6"><h5><em>6</em> Department flow — clinics, ER, admission</h5>
+  <ol>
+   <li>Under any of these roles the worklist shows <b>completed and accepted cases only</b>. New, under-review and cancelled cases are not visible.</li>
+   <li>When the patient arrives, search by <b>national ID</b> or by name.</li>
+   <li>Open <code>Attachments</code> or <code>Details</code> to check the referral form and reports before receiving the patient.</li>
+   <li>Click <code>Open visit</code>. A confirmation window shows the patient details, MRN and payer. On confirmation the case becomes ${chip("acc")}.</li>
+  </ol>
+ </section>
+
+ <section id="g7"><h5><em>7</em> Documents</h5>
+  <table class="gt"><tr><th>Document</th><th>Status</th><th>Effect</th></tr>
+   <tr><td>Referral form</td><td><b>Required</b></td><td>Blocks completion while missing</td></tr>
+   <tr><td>Medical report</td><td><b>Required</b></td><td>Blocks completion while missing</td></tr>
+   <tr><td>Treatment letter / plan</td><td>Optional</td><td>Never blocks completion, no warning shown</td></tr>
+   <tr><td>Other supporting documents</td><td>Optional</td><td>Never blocks completion, no warning shown</td></tr>
+  </table>
+  <p>In the <b>Attachments</b> tab each document carries a tag: <b>Uploaded</b> in green, or <b>Not uploaded</b> — red for required documents and neutral grey for optional ones. A card missing a required document carries a <b>“Missing documents”</b> tag, visible to the Business Center only.</p>
+  <p>Clicking <code>Attachments</code> next to an uploaded document opens a mock preview in place.</p>
+ </section>
+
+ <section id="g8"><h5><em>8</em> Editing and cancelling</h5>
+  <p><b>Editing</b> is available to the Business Center at stages ${chip("new")} ${chip("review")} ${chip("mr")} only. The <code>Edit</code> button reopens the entry form fully pre-filled, so details can be corrected or missing documents uploaded. The edit is written to the audit trail.</p>
+  <p><b>Locked after completion:</b> once the case is ${chip("done")} and released to departments, both buttons disappear and a message states that the case is locked.</p>
+  <p><b>Cancelling:</b> <code>Cancel referral</code> opens a window with a list of common reasons plus a free-text field. <b>Nothing is saved without a reason.</b> After cancelling:</p>
+  <ul>
+   <li>The case becomes ${chip("cancel")} with its own counter and filter.</li>
+   <li>The reason appears on the card and in the audit trail with the employee name, number and timestamp.</li>
+   <li>The case is never shown to departments; it stays with the Business Center for tracking and reporting.</li>
+  </ul>
+ </section>
+
+ <section id="g9"><h5><em>9</em> Search, filters and counters</h5>
+  <ul>
+   <li><b>The search field</b> covers: national ID, patient name, clinic or center name, provider code, referral number and MRN.</li>
+   <li><b>The clinic list</b> filters cases by referring provider.</li>
+   <li><b>The status list</b> filters cases by stage.</li>
+   <li><b>The counter cards</b> at the top show how many cases sit at each stage; clicking one applies its filter and clicking it again clears it.</li>
+   <li><code>Clear filters</code> returns the view to all cases.</li>
+  </ul>
+ </section>
+
+ <section id="g10"><h5><em>10</em> The case card</h5>
+  <p>Every referral appears as its own card showing:</p>
+  <ul>
+   <li>The referring clinic or center and its code.</li>
+   <li>The referral number, date and time received, and the MRN once issued.</li>
+   <li>Patient name, national ID, gender, and the age calculated from the date of birth (the date itself appears in the Details tab).</li>
+   <li>Treating doctor, receiving unit and specialty.</li>
+   <li>A colour-coded stage tag and a progress track showing its position among the five stages.</li>
+   <li>Only the action buttons your current role is allowed to use.</li>
+  </ul>
+  <p>The <b>Details</b> tab holds the rest: mobile number, nationality, payer and insurance code.</p>
+ </section>
+
+ <section id="g11"><h5><em>11</em> Audit trail</h5>
+  <p>Each card has an <b>Audit trail</b> tab listing the full history in chronological order. Every event records the <b>stage</b>, a <b>description of the action</b>, the <b>employee name</b>, the <b>employee number</b> and the <b>date and time</b>. Edits and cancellations are logged too, including the reason, so each case can be traced from the moment the referral arrives until the visit is opened.</p>
+ </section>
+
+ <section id="g12"><h5><em>12</em> Patients with an existing file</h5>
+  <p>If the national ID is already registered, the card carries an <b>“Existing file found”</b> tag. Clicking <code>Open file</code> then opens <b>Update patient file</b> instead: no new file is created, and the details and insurance code are updated on the existing record. The audit trail records it as an update rather than a creation.</p>
+  <p>To try it: the case for <b>Saad Fahad Alshammari</b> is flagged with an existing file.</p>
+ </section>
+
+ <section id="g13"><h5><em>13</em> Prototype limits</h5>
+  <ul>
+   <li>All names, numbers and records are <b>fictional</b> demonstration data.</li>
+   <li>There is no live HIS integration; the registration screen is a mock and MRNs are generated at random.</li>
+   <li>Document upload is simulated — no real files are transferred, and the preview is illustrative.</li>
+   <li>There is no login; role switching is manual and exists only for the walkthrough.</li>
+   <li><b>Any changes you make are lost on page reload</b> and the data returns to its original state.</li>
+  </ul>
+ </section>
+ </div>`
+};
+
+function jump(id){
+  const el=document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function openGuide(){
+  const L=t();
+  document.getElementById("modalHost").innerHTML=
+   `<div class="scrim" onclick="if(event.target===this)closeModal()"><div class="modal wide">
+      <header><div><h3>${L.guideTitle}</h3><div class="sub">${L.guideSub}</div></div>
+      <button class="x" onclick="closeModal()">✕</button></header>
+      <div class="body">${GUIDE[LANG]()}</div>
+      <footer><button class="btn" onclick="closeModal()">${L.guideClose}</button></footer>
+   </div></div>`;
+}
+
+paint();
+openGuide();
+</script>
